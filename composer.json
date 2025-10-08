@@ -15,6 +15,7 @@
         "mglaman/phpstan-drupal": "^2.0",
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^2.1",
+        "ergebnis/composer-normalize": "^2.44",
         "phpstan/phpstan-deprecation-rules": "^2.0"
     },
     "repositories": [
@@ -47,7 +48,8 @@
       "sort-packages": true,
       "allow-plugins": {
         "dealerdirect/phpcodesniffer-composer-installer": true,
-        "phpstan/extension-installer": true
+        "phpstan/extension-installer": true,
+        "ergebnis/composer-normalize": true
       }
     }
 }
