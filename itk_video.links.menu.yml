@@ -1,5 +1,5 @@
 itk_video.settings:
-  title: 'ITK Video'
-  description: 'Configure ITK Video settings and supported providers.'
+  title: "ITK Video"
+  description: "Configure ITK Video settings and supported providers."
   parent: system.admin_config_media
   route_name: itk_video.settings

@@ -1,7 +1,7 @@
 itk_video.settings:
-  path: '/admin/config/media/itk-video'
+  path: "/admin/config/media/itk-video"
   defaults:
     _form: 'Drupal\itk_video\Form\ItkVideoSettingsForm'
-    _title: 'ITK Video Settings'
+    _title: "ITK Video Settings"
   requirements:
-    _permission: 'administer itk video settings'
+    _permission: "administer itk video settings"
