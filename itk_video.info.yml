@@ -1,0 +1,5 @@
+name: ITK Video
+type: module
+description: 'Module that supplies a Video field, with support for VideoTool and respect to CookieInformation.'
+package: ITK
+core_version_requirement: ^10 || ^11

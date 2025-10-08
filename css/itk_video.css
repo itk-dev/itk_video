@@ -1,0 +1,28 @@
+.itk-video-responsive {
+  overflow: hidden;
+  padding-bottom: 56.25%;
+  position: relative;
+  height: 0;
+  margin-bottom: 1.5em;
+}
+
+.itk-video-responsive > iframe {
+  background: #E2ECEE;
+  border: 3px solid #D5E4E6;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.itk-blocked-text {
+  z-index: 1;
+  position: absolute;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+  transform: translateY(-50%);
+  top: 50%;
+}

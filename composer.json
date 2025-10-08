@@ -1,0 +1,53 @@
+{
+    "name": "itk-dev/itk_video",
+    "type": "drupal-module",
+    "description": "Module that supplies Video integration",
+    "keywords": ["Drupal"],
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "require": {
+        "psr/cache": "^3.0",
+        "drush/drush": "^12 || ^13"
+    },
+    "require-dev": {
+        "drupal/coder": "^8.3",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
+        "mglaman/phpstan-drupal": "^2.0",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-deprecation-rules": "^2.0"
+    },
+    "repositories": [
+      {
+          "type": "composer",
+          "url": "https://packages.drupal.org/8"
+      }
+    ],
+    "scripts": {
+        "code-analysis/drupal-check": [
+            "vendor/bin/drupal-check --deprecations --analysis --exclude-dir=vendor *.* src"
+        ],
+        "code-analysis": [
+            "@code-analysis/drupal-check"
+        ],
+        "coding-standards-check/phpcs": [
+            "vendor/bin/phpcs --standard=phpcs.xml.dist"
+        ],
+        "coding-standards-check": [
+            "@coding-standards-check/phpcs"
+        ],
+        "coding-standards-apply/phpcs": [
+            "vendor/bin/phpcbf --standard=phpcs.xml.dist"
+        ],
+        "coding-standards-apply": [
+            "@coding-standards-apply/phpcs"
+        ]
+    },
+    "config": {
+      "sort-packages": true,
+      "allow-plugins": {
+        "dealerdirect/phpcodesniffer-composer-installer": true,
+        "phpstan/extension-installer": true
+      }
+    }
+}
