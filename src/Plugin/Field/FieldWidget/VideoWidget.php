@@ -70,6 +70,8 @@ class VideoWidget extends LinkWidget {
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
+    // The contents of this method are in large parts copied from the parent
+    // class.
     $config = $this->configFactory->get('itk_video.settings')->get('providers_status');
     $enabledProviders = [];
     foreach ($config as $provider => $enabled) {

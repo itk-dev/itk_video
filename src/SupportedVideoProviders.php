@@ -19,7 +19,6 @@ enum SupportedVideoProviders: string {
     return [
       'video_tool' => [
         'label' => 'Video Tool',
-    // Name of provider used in preg_match when analyzing iframe src.
         'url' => 'media.videotool.dk',
     // Use custom code to create iframe.
         'type' => 'custom',
@@ -28,7 +27,6 @@ enum SupportedVideoProviders: string {
       ],
       'vimeo' => [
         'label' => 'Vimeo',
-      // Name of provider used in preg_match when analyzing iframe src.
         'url' => 'vimeo.com',
       // Use oembed endpoint when defining iframe.
         'type' => 'Oembed',

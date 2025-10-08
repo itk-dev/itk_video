@@ -191,6 +191,7 @@ class VideoFormatter extends LinkFormatter {
     if (in_array($videoArray['host'], SupportedVideoProviders::getProviderUrls())) {
       $providerKey = $this->getProviderIdFromHost($supportedProviders, $videoArray['host']);
       $requiredCookies = $supportedProviders[$providerKey]['requiredCookies'];
+
       if (!empty($requiredCookies) && isset($videoArray['iframe'])) {
         $videoArray['iframe'] = str_replace(' src="', ' src="" data-category-consent="' . $requiredCookies . '" data-consent-src="', $videoArray['iframe']);
         $blockedText = $this->t('<strong>Accept cookies</strong> to view this video:');
