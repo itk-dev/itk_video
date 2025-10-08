@@ -7,14 +7,8 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - drupal-7
-          - drupal-8
-          - drupal-9
           - drupal-10
           - drupal-11
-          - symfony-3
-          - symfony-4
-          - symfony-6
     name: Validate compose (${{ matrix.version }})
     steps:
       - uses: actions/checkout@master
