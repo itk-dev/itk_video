@@ -25,9 +25,9 @@ class Video extends LinkItem {
    */
   public static function defaultFieldSettings() {
     return [
-        'title' => DRUPAL_REQUIRED,
-        'link_type' => LinkItemInterface::LINK_EXTERNAL,
-      ] + parent::defaultFieldSettings();
+      'title' => DRUPAL_REQUIRED,
+      'link_type' => LinkItemInterface::LINK_EXTERNAL,
+    ] + parent::defaultFieldSettings();
   }
 
   /**

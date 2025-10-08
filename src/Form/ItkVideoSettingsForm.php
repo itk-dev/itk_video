@@ -50,7 +50,7 @@ class ItkVideoSettingsForm extends ConfigFormBase {
       '#collapsible' => FALSE,
     ];
 
-    // Get available providers from the service
+    // Get available providers from the service.
     $supportedProviders = SupportedVideoProviders::getConfig();
     $availableProviders = [];
     foreach ($supportedProviders as $provider => $providerConfig) {
@@ -79,7 +79,7 @@ class ItkVideoSettingsForm extends ConfigFormBase {
 
     $providers = $form_state->getValue('providers_status');
     $providersStatus = array_map(function ($enabled) {
-      return (bool)$enabled;
+      return (bool) $enabled;
     }, $providers);
 
     $config->set('providers_status', $providersStatus);

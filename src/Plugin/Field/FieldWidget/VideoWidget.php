@@ -5,12 +5,11 @@ namespace Drupal\itk_video\Plugin\Field\FieldWidget;
 use Drupal\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Url;
 use Drupal\itk_video\SupportedVideoProviders;
 use Drupal\link\Plugin\Field\FieldWidget\LinkWidget;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'itk_video_widget' widget.
@@ -24,7 +23,6 @@ use Drupal\link\Plugin\Field\FieldWidget\LinkWidget;
  *   }
  * )
  */
-
 class VideoWidget extends LinkWidget {
 
   /**
@@ -40,7 +38,7 @@ class VideoWidget extends LinkWidget {
    *   The widget settings.
    * @param array $third_party_settings
    *   Any third party settings.
-   * @param ConfigFactoryInterface $configFactory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory.
    */
   public function __construct(
@@ -49,7 +47,7 @@ class VideoWidget extends LinkWidget {
     FieldDefinitionInterface $field_definition,
     array $settings,
     array $third_party_settings,
-    protected ConfigFactoryInterface $configFactory
+    protected ConfigFactoryInterface $configFactory,
   ) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
   }
@@ -57,8 +55,7 @@ class VideoWidget extends LinkWidget {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface|\Symfony\Component\DependencyInjection\ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): WidgetBase
-  {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): VideoWidget {
     return new static(
       $plugin_id,
       $plugin_definition,
@@ -69,6 +66,9 @@ class VideoWidget extends LinkWidget {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $config = $this->configFactory->get('itk_video.settings')->get('providers_status');
     $enabledProviders = [];
@@ -147,7 +147,6 @@ class VideoWidget extends LinkWidget {
 
       if (!$element['title']['#required']) {
         // Make title required on the front-end when URI filled-in.
-
         $parents = $element['#field_parents'];
         $parents[] = $this->fieldDefinition->getName();
         $selector = $root = array_shift($parents);
@@ -167,8 +166,8 @@ class VideoWidget extends LinkWidget {
       $element['#element_validate'][] = [static::class, 'validateTitleNoLink'];
     }
 
-    // Exposing the attributes array in the widget is left for alternate and more
-    // advanced field widgets.
+    // Exposing the attributes array in the widget is left for alternate and
+    // more advanced field widgets.
     $element['attributes'] = [
       '#type' => 'value',
       '#tree' => TRUE,

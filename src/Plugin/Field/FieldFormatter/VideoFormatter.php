@@ -4,18 +4,12 @@ namespace Drupal\itk_video\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\itk_video\Plugin\Field\FieldType\Video;
 use Drupal\link\Plugin\Field\FieldFormatter\LinkFormatter;
-use GuzzleHttp\Exception\GuzzleException;
 use Drupal\itk_video\SupportedVideoProviders;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\media\OEmbed\UrlResolverInterface;
 
 /**
  * Plugin implementation of the 'itk_video_formatter' formatter.
@@ -42,7 +36,7 @@ class VideoFormatter extends LinkFormatter {
     protected $urlResolver,
     protected $httpClient,
     protected $pathValidator,
-    protected ConfigFactoryInterface $configFactory
+    protected ConfigFactoryInterface $configFactory,
   ) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings, $pathValidator);
   }
@@ -55,8 +49,7 @@ class VideoFormatter extends LinkFormatter {
     array $configuration,
     $plugin_id,
     $plugin_definition,
-  ): VideoFormatter
-  {
+  ): VideoFormatter {
     return new static(
       $plugin_id,
       $plugin_definition,
@@ -75,10 +68,9 @@ class VideoFormatter extends LinkFormatter {
   /**
    * {@inheritdoc}
    *
-   * @throws GuzzleException
+   * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  public function viewElements(FieldItemListInterface $items, $langcode): array
-  {
+  public function viewElements(FieldItemListInterface $items, $langcode): array {
     $elements['#attached']['library'][] = 'itk_video/video';
 
     foreach ($items as $delta => $item) {
@@ -102,16 +94,19 @@ class VideoFormatter extends LinkFormatter {
   /**
    * Render a video from an embed url or iframe.
    *
-   * @param Video $value
+   * @param \Drupal\itk_video\Plugin\Field\FieldType\Video $value
+   *   The video field type.
+   *
    * @return string|null
    *   The rendered html.
    *
-   * @throws GuzzleException An exception if guzzle fails.
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   *   An exception if guzzle fails.
    */
   private function createVideo(Video $value): ?string {
     $settings = $this->configFactory->get('itk_video.settings');
 
-    // Set string
+    // Set string.
     $url = $value->getUrl()->toString();
 
     $videoArray = $this->createVideoFromUrl($url, $settings);
@@ -128,6 +123,8 @@ class VideoFormatter extends LinkFormatter {
    *
    * @param string $text
    *   The text input to create video from.
+   * @param array $settings
+   *   The settings for the field.
    *
    * @return array
    *   The resulting video array.
@@ -135,7 +132,7 @@ class VideoFormatter extends LinkFormatter {
    * @throws \GuzzleHttp\Exception\GuzzleException
    *   Exception if oembed fails.
    */
-  private function createVideoFromUrl($text, $settings): array {
+  private function createVideoFromUrl(string $text, array $settings): array {
     $video = [];
     if (filter_var($text, FILTER_VALIDATE_URL)) {
       $supportedProviders = SupportedVideoProviders::getConfig();
@@ -183,11 +180,13 @@ class VideoFormatter extends LinkFormatter {
    *
    * @param array $videoArray
    *   The video array.
+   * @param \Drupal\itk_video\Plugin\Field\FieldType\Video $fieldValue
+   *   The video array.
    *
    * @return array
-   *   The altered array.
+   *   The modified video array.
    */
-  private function applyCookieConsent(array $videoArray, $fieldValue): array {
+  private function applyCookieConsent(array $videoArray, Video $fieldValue): array {
     $supportedProviders = SupportedVideoProviders::getConfig();
     if (in_array($videoArray['host'], SupportedVideoProviders::getProviderUrls())) {
       $providerKey = $this->getProviderIdFromHost($supportedProviders, $videoArray['host']);
@@ -197,14 +196,25 @@ class VideoFormatter extends LinkFormatter {
         $blockedText = $this->t('<strong>Accept cookies</strong> to view this video:');
         $blockedText .= '<br>';
         $blockedText .= '"' . $fieldValue->title . '"' ?? '';
-        $videoArray['iframe'] = $videoArray['iframe'] . '<div class="itk-blocked-text"> ' . $blockedText. '</div>';
+        $videoArray['iframe'] = $videoArray['iframe'] . '<div class="itk-blocked-text"> ' . $blockedText . '</div>';
       }
     }
 
     return $videoArray;
   }
 
-  private function getProviderIdFromHost($supportedProviders, $host): ?string {
+  /**
+   * Get provider id from supplied host.
+   *
+   * @param array $supportedProviders
+   *   A list of all supported providers.
+   * @param string $host
+   *   The host to get the provider id from.
+   *
+   * @return string|null
+   *   A provider id or null if not found.
+   */
+  private function getProviderIdFromHost(array $supportedProviders, string $host): ?string {
     foreach ($supportedProviders as $key => $value) {
       if ($value['url'] === $host) {
         return $key;
@@ -213,4 +223,5 @@ class VideoFormatter extends LinkFormatter {
 
     return NULL;
   }
+
 }

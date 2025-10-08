@@ -5,8 +5,7 @@
 <ruleset name="PHP_CodeSniffer">
   <description>The coding standard.</description>
 
-  <file>web/modules/custom/</file>
-  <file>web/themes/custom/</file>
+  <file>src/</file>
 
   <!-- Exclude generated files -->
   <exclude-pattern>node_modules</exclude-pattern>
