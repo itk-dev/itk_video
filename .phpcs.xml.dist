@@ -10,7 +10,6 @@
   <!-- Exclude generated files -->
   <exclude-pattern>node_modules</exclude-pattern>
   <exclude-pattern>vendor</exclude-pattern>
-  <exclude-pattern>web/*/custom/*/build/</exclude-pattern>
   <exclude-pattern>*.css</exclude-pattern>
   <exclude-pattern>*.js</exclude-pattern>
 

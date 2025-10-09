@@ -24,7 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   }
  * )
  */
-class VideoFormatter extends LinkFormatter {
+final class VideoFormatter extends LinkFormatter {
 
   public function __construct(
     $plugin_id,
@@ -124,7 +124,7 @@ class VideoFormatter extends LinkFormatter {
    *
    * @param string $text
    *   The text input to create video from.
-   * @param array $settings
+   * @param ImmutableConfig $settings
    *   The settings for the field.
    *
    * @return array
@@ -197,7 +197,7 @@ class VideoFormatter extends LinkFormatter {
         $videoArray['iframe'] = str_replace(' src="', ' src="" data-category-consent="' . $requiredCookies . '" data-consent-src="', $videoArray['iframe']);
         $blockedText = $this->t('<strong>Accept cookies</strong> to view this video:');
         $blockedText .= '<br>';
-        $blockedText .= '"' . $fieldValue->title . '"' ?? '';
+        $blockedText .= $fieldValue->title ? '"' . $fieldValue->title . '"' : '';
         $videoArray['iframe'] = $videoArray['iframe'] . '<div class="itk-blocked-text"> ' . $blockedText . '</div>';
       }
     }

@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [PR-1](https://github.com/itk-dev/itk_video/pull/1)
 
-  - Base fonctionality with a new itk_video field type
+  - Base functionality with a new itk_video field type
   - Support for Videotool and Vimeo
   - Support for CookieInformation.com
   - Config page.

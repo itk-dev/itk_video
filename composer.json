@@ -1,6 +1,6 @@
 {
     "name": "itk-dev/itk_video",
-    "description": "Module that supplies Video integration",
+    "description": "Module that provides Video integration",
     "license": "MIT",
     "type": "drupal-module",
     "keywords": [

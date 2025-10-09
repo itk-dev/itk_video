@@ -2,7 +2,6 @@
 
 namespace Drupal\itk_video\Plugin\Field\FieldWidget;
 
-use Drupal\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -22,7 +21,7 @@ use Drupal\link\Plugin\Field\FieldWidget\LinkWidget;
  *   }
  * )
  */
-class VideoWidget extends LinkWidget {
+final class VideoWidget extends LinkWidget {
 
   /**
    * Constructs a VideoWidget object.
@@ -89,14 +88,14 @@ class VideoWidget extends LinkWidget {
         // However, if it is inaccessible to the current user, do not display it
         // to them.
         if (\Drupal::currentUser()->hasPermission('link to any page') || $item->getUrl()->access()) {
-          $display_uri = static::getUriAsDisplayableString($item->uri);
+          $display_uri = static::getUriAsDisplayableString($item->getUrl()->getUri());
         }
       }
       catch (\InvalidArgumentException $e) {
         // If $item->uri is invalid, show value as is, so the user can see what
         // to edit.
         // @todo Add logging here in https://www.drupal.org/project/drupal/issues/3348020
-        $display_uri = $item->uri;
+        $display_uri = $item->getUrl()->getUri();
       }
     }
     $element['uri'] = [
