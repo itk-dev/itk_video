@@ -6,3 +6,4 @@ parameters:
   reportUnmatchedIgnoredErrors: false
   excludePaths:
       - src/ProxyClass/*
+      - vendor/*

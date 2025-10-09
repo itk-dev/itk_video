@@ -87,6 +87,7 @@ final class VideoWidget extends LinkWidget {
         // The current field value could have been entered by a different user.
         // However, if it is inaccessible to the current user, do not display it
         // to them.
+        // @phpstan-ignore globalDrupalDependencyInjection.useDependencyInjection
         if (\Drupal::currentUser()->hasPermission('link to any page') || $item->getUrl()->access()) {
           $display_uri = static::getUriAsDisplayableString($item->getUrl()->getUri());
         }

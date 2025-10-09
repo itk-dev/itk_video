@@ -36,7 +36,7 @@ final class VideoFormatter extends LinkFormatter {
     array $third_party_settings,
     protected $urlResolver,
     protected $httpClient,
-    protected $pathValidator,
+    protected $pathValidator, // @phpstan-ignore property.phpDocType
     protected ConfigFactoryInterface $configFactory,
   ) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings, $pathValidator);
