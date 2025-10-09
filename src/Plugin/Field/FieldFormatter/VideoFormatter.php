@@ -218,7 +218,7 @@ class VideoFormatter extends LinkFormatter {
    */
   private function getProviderIdFromHost(array $supportedProviders, string $host): ?string {
     foreach ($supportedProviders as $key => $value) {
-      if ($value['url'] === $host) {
+      if ($value['host'] === $host) {
         return $key;
       }
     }

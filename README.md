@@ -53,7 +53,6 @@ docker compose run --rm phpfpm composer audit
 Check assets:
 
 ```bash
-docker compose run --rm prettier 'js/**/*.js' --check
 docker compose run --rm prettier 'css/**/*.css' --check
 ```
 

@@ -24,7 +24,7 @@ enum SupportedVideoProviders: string {
         'type' => 'custom',
     // Cookies that require acceptance from user. CookieInformation syntax.
         'requiredCookies' => 'cookie_cat_statistic',
-      ],  
+      ],
       'vimeo' => [
         'label' => 'Vimeo',
         'host' => 'vimeo.com',
