@@ -4,6 +4,7 @@ namespace Drupal\itk_video\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\itk_video\Plugin\Field\FieldType\Video;
@@ -132,14 +133,14 @@ class VideoFormatter extends LinkFormatter {
    * @throws \GuzzleHttp\Exception\GuzzleException
    *   Exception if oembed fails.
    */
-  private function createVideoFromUrl(string $text, array $settings): array {
+  private function createVideoFromUrl(string $text, ImmutableConfig $settings): array {
     $video = [];
     if (filter_var($text, FILTER_VALIDATE_URL)) {
       $supportedProviders = SupportedVideoProviders::getConfig();
       $providersStatus = $settings->get('providers_status');
 
       $url = parse_url($text);
-      if (in_array($url['host'], SupportedVideoProviders::getProviderUrls())) {
+      if (in_array($url['host'], SupportedVideoProviders::getProviderHosts())) {
         $video['host'] = $url['host'];
 
         $providerKey = $this->getProviderIdFromHost($supportedProviders, $video['host']);
@@ -188,7 +189,7 @@ class VideoFormatter extends LinkFormatter {
    */
   private function applyCookieConsent(array $videoArray, Video $fieldValue): array {
     $supportedProviders = SupportedVideoProviders::getConfig();
-    if (in_array($videoArray['host'], SupportedVideoProviders::getProviderUrls())) {
+    if (in_array($videoArray['host'], SupportedVideoProviders::getProviderHosts())) {
       $providerKey = $this->getProviderIdFromHost($supportedProviders, $videoArray['host']);
       $requiredCookies = $supportedProviders[$providerKey]['requiredCookies'];
 

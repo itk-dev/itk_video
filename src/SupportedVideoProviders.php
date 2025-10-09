@@ -19,15 +19,15 @@ enum SupportedVideoProviders: string {
     return [
       'video_tool' => [
         'label' => 'Video Tool',
-        'url' => 'media.videotool.dk',
+        'host' => 'media.videotool.dk',
     // Use custom code to create iframe.
         'type' => 'custom',
     // Cookies that require acceptance from user. CookieInformation syntax.
         'requiredCookies' => 'cookie_cat_statistic',
-      ],
+      ],  
       'vimeo' => [
         'label' => 'Vimeo',
-        'url' => 'vimeo.com',
+        'host' => 'vimeo.com',
       // Use oembed endpoint when defining iframe.
         'type' => 'Oembed',
       // Cookies that require acceptance from user. CookieInformation syntax.
@@ -42,14 +42,14 @@ enum SupportedVideoProviders: string {
    * @return array
    *   A list of provider urls.
    */
-  public static function getProviderUrls(): array {
-    $providerUrls = [];
+  public static function getProviderHosts(): array {
+    $providerHosts = [];
     $providers = SupportedVideoProviders::getConfig();
     foreach ($providers as $config) {
-      $providerUrls[] = $config['url'];
+      $providerHosts[] = $config['host'];
     }
 
-    return $providerUrls;
+    return $providerHosts;
   }
 
 }

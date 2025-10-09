@@ -9,7 +9,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\itk_video\SupportedVideoProviders;
 use Drupal\link\Plugin\Field\FieldWidget\LinkWidget;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'itk_video_widget' widget.
@@ -32,13 +31,13 @@ class VideoWidget extends LinkWidget {
    *   The plugin_id for the widget.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   * @param FieldDefinitionInterface $field_definition
    *   The definition of the field to which the widget is associated.
    * @param array $settings
    *   The widget settings.
    * @param array $third_party_settings
    *   Any third party settings.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
+   * @param ConfigFactoryInterface $configFactory
    *   The config factory.
    */
   public function __construct(
@@ -55,7 +54,7 @@ class VideoWidget extends LinkWidget {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): VideoWidget {
+  public static function create($container, array $configuration, $plugin_id, $plugin_definition): VideoWidget {
     return new static(
       $plugin_id,
       $plugin_definition,
