@@ -56,10 +56,11 @@ Check assets:
 docker compose run --rm prettier 'css/**/*.css' --check
 ```
 
-Check php:
+Check php, code sniffer and code-analysis:
 
 ```bash
 docker compose run --rm phpfpm vendor/bin/phpcs
+./scripts/code-analysis
 ```
 
 Check markdown and yaml:
