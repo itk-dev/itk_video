@@ -197,8 +197,9 @@ final class VideoFormatter extends LinkFormatter {
       if (!empty($requiredCookies) && isset($videoArray['iframe'])) {
         $videoArray['iframe'] = str_replace(' src="', ' src="" data-category-consent="' . $requiredCookies . '" data-consent-src="', $videoArray['iframe']);
         $blockedText = $this->t('<strong>Accept cookies</strong> to view this video:');
-        $blockedText .= '<br>';
-        $blockedText .= $fieldValue->title ? '"' . $fieldValue->title . '"' : '';
+        if ($fieldValue->title) {
+          $blockedText .= '<br>"' . $fieldValue->title.'"';
+        }
         $videoArray['iframe'] = $videoArray['iframe'] . '<div class="itk-blocked-text"> ' . $blockedText . '</div>';
       }
     }
