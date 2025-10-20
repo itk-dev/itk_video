@@ -1,6 +1,6 @@
 # ITK Video
 
-Module that supplies video integration, through a dedicated itk_video field
+Module that supplies video integration through a dedicated itk_video field
 type.
 
 - Supports [CookieInformation](https://cookieinformation.com)
