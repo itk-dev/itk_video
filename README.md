@@ -9,7 +9,7 @@ type.
 
 ## How it works
 
-The supported video providers are defined in [SupportedVideoProviders.php](src/SupportedVideoProviders.php).
+The supported video providers are defined in [SupportedVideoProvider.php](src/SupportedVideoProvide.php).
 The definitions include
 
 - host: Used to identify the provider from the supplied video URL.
@@ -34,7 +34,7 @@ Settings include:
 
 ## Code
 
-To check that coding standards are up to scratch run the following commands:
+To check coding standards run the following commands:
 
 Install dependencies:
 

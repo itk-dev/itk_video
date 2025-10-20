@@ -4,7 +4,7 @@ namespace Drupal\itk_video\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\itk_video\SupportedVideoProviders;
+use Drupal\itk_video\SupportedVideoProvider;
 
 /**
  * Configuration form for ITK Video settings.
@@ -51,7 +51,7 @@ class ItkVideoSettingsForm extends ConfigFormBase {
     ];
 
     // Get available providers from the service.
-    $supportedProviders = SupportedVideoProviders::getConfig();
+    $supportedProviders = SupportedVideoProvider::getConfig();
     $availableProviders = [];
     foreach ($supportedProviders as $provider => $providerConfig) {
       $availableProviders[$provider] = $providerConfig['label'];

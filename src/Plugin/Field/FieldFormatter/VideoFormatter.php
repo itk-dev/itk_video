@@ -9,7 +9,8 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\itk_video\Plugin\Field\FieldType\Video;
 use Drupal\link\Plugin\Field\FieldFormatter\LinkFormatter;
-use Drupal\itk_video\SupportedVideoProviders;
+use Drupal\itk_video\SupportedVideoProvider;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -33,11 +34,11 @@ final class VideoFormatter extends LinkFormatter {
     array $settings,
     $label,
     $view_mode,
+    $pathValidator,
     array $third_party_settings,
     protected $urlResolver,
     protected $httpClient,
     // @phpstan-ignore property.phpDocType
-    protected $pathValidator,
     protected ConfigFactoryInterface $configFactory,
   ) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings, $pathValidator);
@@ -82,7 +83,7 @@ final class VideoFormatter extends LinkFormatter {
       if (!empty($item->getUrl()->toString())) {
         $elements[$delta] = [
           '#prefix' => '<div class="itk-video itk-video-responsive">',
-          '#markup' => $this->createVideo($item),
+          '#markup' => $this->createVideoIframe($item),
           '#suffix' => '</div>',
         ];
       }
@@ -103,19 +104,19 @@ final class VideoFormatter extends LinkFormatter {
    * @throws \GuzzleHttp\Exception\GuzzleException
    *   An exception if guzzle fails.
    */
-  private function createVideo(Video $value): ?string {
+  private function createVideoIframe(Video $value): ?string {
     $settings = $this->configFactory->get('itk_video.settings');
 
     // Set string.
     $url = $value->getUrl()->toString();
 
-    $videoArray = $this->createVideoFromUrl($url, $settings);
+    $video = $this->createVideoFromUrl($url, $settings);
 
     if ($settings->get('respect_cookie_information')) {
-      $videoArray = $this->applyCookieConsent($videoArray, $value);
+      $video = $this->applyCookieConsent($video, $value);
     }
 
-    return $videoArray['iframe'] ?? NULL;
+    return $video['iframe'] ?? NULL;
   }
 
   /**
@@ -135,23 +136,23 @@ final class VideoFormatter extends LinkFormatter {
   private function createVideoFromUrl(string $text, ImmutableConfig $settings): array {
     $video = [];
     if (filter_var($text, FILTER_VALIDATE_URL)) {
-      $supportedProviders = SupportedVideoProviders::getConfig();
+      $supportedProviders = SupportedVideoProvider::getConfig();
       $providersStatus = $settings->get('providers_status');
 
       $url = parse_url($text);
-      if (in_array($url['host'], SupportedVideoProviders::getProviderHosts())) {
+      if (in_array($url['host'], SupportedVideoProvider::getProviderHosts())) {
         $video['host'] = $url['host'];
 
         $providerKey = $this->getProviderIdFromHost($supportedProviders, $video['host']);
 
         if (!empty($providerKey && $providersStatus[$providerKey])) {
           // Use oembed to create iframe if possible.
-          if ('Oembed' === $supportedProviders[$providerKey]['type']) {
+          if ('oembed' === $supportedProviders[$providerKey]['type']) {
             try {
               $url = $this->urlResolver->getResourceUrl($text);
               $request = $this->httpClient->request('GET', $url);
               $status = $request->getStatusCode();
-              if (200 == $status) {
+              if (Response::HTTP_OK === $status) {
                 $video['oembed'] = Json::decode($request->getBody()->getContents());
                 $video['iframe'] = $video['oembed']['html'];
               }
@@ -187,8 +188,8 @@ final class VideoFormatter extends LinkFormatter {
    *   The modified video array.
    */
   private function applyCookieConsent(array $videoArray, Video $fieldValue): array {
-    $supportedProviders = SupportedVideoProviders::getConfig();
-    if (in_array($videoArray['host'], SupportedVideoProviders::getProviderHosts())) {
+    $supportedProviders = SupportedVideoProvider::getConfig();
+    if (in_array($videoArray['host'], SupportedVideoProvider::getProviderHosts())) {
       $providerKey = $this->getProviderIdFromHost($supportedProviders, $videoArray['host']);
       $requiredCookies = $supportedProviders[$providerKey]['requiredCookies'];
 
@@ -196,7 +197,7 @@ final class VideoFormatter extends LinkFormatter {
         $videoArray['iframe'] = str_replace(' src="', ' src="" data-category-consent="' . $requiredCookies . '" data-consent-src="', $videoArray['iframe']);
         $blockedText = $this->t('<strong>Accept cookies</strong> to view this video:');
         if ($fieldValue->title) {
-          $blockedText .= '<br>"' . $fieldValue->title.'"';
+          $blockedText .= '<br>"' . $fieldValue->title . '"';
         }
         $videoArray['iframe'] = $videoArray['iframe'] . '<div class="itk-blocked-text"> ' . $blockedText . '</div>';
       }

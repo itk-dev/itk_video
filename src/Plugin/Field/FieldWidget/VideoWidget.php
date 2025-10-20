@@ -6,8 +6,9 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\itk_video\SupportedVideoProviders;
+use Drupal\itk_video\SupportedVideoProvider;
 use Drupal\link\Plugin\Field\FieldWidget\LinkWidget;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Plugin implementation of the 'itk_video_widget' widget.
@@ -38,6 +39,8 @@ final class VideoWidget extends LinkWidget {
    *   Any third party settings.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The current account.
    */
   public function __construct(
     $plugin_id,
@@ -46,6 +49,7 @@ final class VideoWidget extends LinkWidget {
     array $settings,
     array $third_party_settings,
     protected ConfigFactoryInterface $configFactory,
+    protected AccountInterface $account,
   ) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
   }
@@ -60,7 +64,8 @@ final class VideoWidget extends LinkWidget {
       $configuration['field_definition'],
       $configuration['settings'],
       $configuration['third_party_settings'],
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('current_user'),
     );
   }
 
@@ -74,7 +79,7 @@ final class VideoWidget extends LinkWidget {
     $enabledProviders = [];
     foreach ($config as $provider => $enabled) {
       if ($enabled) {
-        $enabledProviders[$provider] = SupportedVideoProviders::getConfig()[$provider]['label'];
+        $enabledProviders[$provider] = SupportedVideoProvider::getConfig()[$provider]['label'];
       }
     }
 
@@ -87,8 +92,7 @@ final class VideoWidget extends LinkWidget {
         // The current field value could have been entered by a different user.
         // However, if it is inaccessible to the current user, do not display it
         // to them.
-        // @phpstan-ignore globalDrupalDependencyInjection.useDependencyInjection
-        if (\Drupal::currentUser()->hasPermission('link to any page') || $item->getUrl()->access()) {
+        if ($this->account->hasPermission('link to any page') || $item->getUrl()->access()) {
           $display_uri = static::getUriAsDisplayableString($item->getUrl()->getUri());
         }
       }
@@ -133,8 +137,7 @@ final class VideoWidget extends LinkWidget {
       '#placeholder' => $this->getSetting('placeholder_title'),
       '#default_value' => $items[$delta]->title ?? NULL,
       '#maxlength' => 255,
-      '#access' => $this->getFieldSetting('title') != DRUPAL_DISABLED,
-      '#required' => $this->getFieldSetting('title') === DRUPAL_REQUIRED && $element['#required'],
+      '#required' => TRUE,
     ];
     // Post-process the title field to make it conditionally required if URL is
     // non-empty. Omit the validation on the field edit form, since the field
@@ -142,7 +145,7 @@ final class VideoWidget extends LinkWidget {
     //
     // Validate that title field is filled out (regardless of uri) when it is a
     // required field.
-    if (!$this->isDefaultValueWidget($form_state) && $this->getFieldSetting('title') === DRUPAL_REQUIRED) {
+    if (!$this->isDefaultValueWidget($form_state)) {
       $element['#element_validate'][] = [static::class, 'validateTitleElement'];
       $element['#element_validate'][] = [static::class, 'validateTitleNoLink'];
 
@@ -161,12 +164,6 @@ final class VideoWidget extends LinkWidget {
       }
     }
 
-    // Ensure that a URI is always entered when an optional title field is
-    // submitted.
-    if (!$this->isDefaultValueWidget($form_state) && $this->getFieldSetting('title') == DRUPAL_OPTIONAL) {
-      $element['#element_validate'][] = [static::class, 'validateTitleNoLink'];
-    }
-
     // Exposing the attributes array in the widget is left for alternate and
     // more advanced field widgets.
     $element['attributes'] = [
@@ -178,40 +175,9 @@ final class VideoWidget extends LinkWidget {
 
     // If cardinality is 1, ensure a proper label is output for the field.
     if ($this->fieldDefinition->getFieldStorageDefinition()->getCardinality() == 1) {
-      // If the link title is disabled, use the field definition label as the
-      // title of the 'uri' element.
-      if ($this->getFieldSetting('title') == DRUPAL_DISABLED) {
-        $element['uri']['#title'] = $element['#title'];
-        // By default the field description is added to the title field. Since
-        // the title field is disabled, we add the description, if given, to the
-        // uri element instead.
-        if (!empty($element['#description'])) {
-          if (empty($element['uri']['#description'])) {
-            $element['uri']['#description'] = $element['#description'];
-          }
-          else {
-            // If we have the description of the type of field together with
-            // the user provided description, we want to make a distinction
-            // between "core help text" and "user entered help text". To make
-            // this distinction more clear, we put them in an unordered list.
-            $element['uri']['#description'] = [
-              '#theme' => 'item_list',
-              '#items' => [
-                // Assume the user-specified description has the most relevance,
-                // so place it first.
-                $element['#description'],
-                $element['uri']['#description'],
-              ],
-            ];
-          }
-        }
-      }
-      // Otherwise wrap everything in a details element.
-      else {
-        $element += [
-          '#type' => 'fieldset',
-        ];
-      }
+      $element += [
+        '#type' => 'fieldset',
+      ];
     }
 
     return $element;

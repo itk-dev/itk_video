@@ -5,7 +5,7 @@ namespace Drupal\itk_video;
 /**
  * Supported video providers.
  */
-enum SupportedVideoProviders: string {
+enum SupportedVideoProvider: string {
   case VIDEO_TOOL = 'video_tool';
   case VIMEO = 'vimeo';
 
@@ -17,7 +17,7 @@ enum SupportedVideoProviders: string {
    */
   public static function getConfig(): array {
     return [
-      'video_tool' => [
+      self::VIDEO_TOOL->value => [
         'label' => 'Video Tool',
         'host' => 'media.videotool.dk',
     // Use custom code to create iframe.
@@ -25,11 +25,11 @@ enum SupportedVideoProviders: string {
     // Cookies that require acceptance from user. CookieInformation syntax.
         'requiredCookies' => 'cookie_cat_statistic',
       ],
-      'vimeo' => [
+      self::VIDEO_TOOL->value => [
         'label' => 'Vimeo',
         'host' => 'vimeo.com',
       // Use oembed endpoint when defining iframe.
-        'type' => 'Oembed',
+        'type' => 'oembed',
       // Cookies that require acceptance from user. CookieInformation syntax.
         'requiredCookies' => 'cookie_cat_statistic cookie_cat_marketing',
       ],
@@ -44,7 +44,7 @@ enum SupportedVideoProviders: string {
    */
   public static function getProviderHosts(): array {
     $providerHosts = [];
-    $providers = SupportedVideoProviders::getConfig();
+    $providers = SupportedVideoProvider::getConfig();
     foreach ($providers as $config) {
       $providerHosts[] = $config['host'];
     }
