@@ -10,12 +10,12 @@ type.
 ## How it works
 
 The supported video providers are defined in [SupportedVideoProviders.php](src/SupportedVideoProviders.php).
-The definitions include;
+The definitions include
 
-- host : Used to identify the provider from the supplied video URL.
-- type : Used to determine if videoinformation should be retrieved bu this
+- host: Used to identify the provider from the supplied video URL.
+- type: Used to determine if videoinformation should be retrieved bu this
 module (custom) or Oembed
-- requiredCookies : The cookies that the provider sets when embedding a video
+- requiredCookies: The cookies that the provider sets when embedding a video
 from that provider. See [CookieInformation](https://support.cookieinformation.com/en/articles/5444629-block-third-party-cookies-with-a-script)
 about what categories are used.
 
