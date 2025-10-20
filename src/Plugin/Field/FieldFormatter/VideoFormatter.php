@@ -80,12 +80,10 @@ final class VideoFormatter extends LinkFormatter {
       $this->createVideo($item);
 
       if (!empty($item->getUrl()->toString())) {
-        $markup =
-          '<div class="itk-video itk-video-responsive">' . $this->createVideo($item) . '</div>';
-
         $elements[$delta] = [
-          '#type' => 'inline_template',
-          '#template' => $markup,
+          '#prefix' => '<div class="itk-video itk-video-responsive">',
+          '#markup' => $this->createVideo($item),
+          '#suffix' => '</div>',
         ];
       }
     }
