@@ -137,7 +137,7 @@ final class VideoWidget extends LinkWidget {
       '#placeholder' => $this->getSetting('placeholder_title'),
       '#default_value' => $items[$delta]->title ?? NULL,
       '#maxlength' => 255,
-      '#required' => TRUE,
+      '#required' => !$this->isDefaultValueWidget($form_state) && $element['#required'],
     ];
     // Post-process the title field to make it conditionally required if URL is
     // non-empty. Omit the validation on the field edit form, since the field

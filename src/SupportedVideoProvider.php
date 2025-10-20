@@ -25,7 +25,7 @@ enum SupportedVideoProvider: string {
     // Cookies that require acceptance from user. CookieInformation syntax.
         'requiredCookies' => 'cookie_cat_statistic',
       ],
-      self::VIDEO_TOOL->value => [
+      self::VIMEO->value => [
         'label' => 'Vimeo',
         'host' => 'vimeo.com',
       // Use oembed endpoint when defining iframe.

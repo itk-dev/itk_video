@@ -60,10 +60,10 @@ final class VideoFormatter extends LinkFormatter {
       $configuration['settings'],
       $configuration['label'],
       $configuration['view_mode'],
+      $container->get('path.validator'),
       $configuration['third_party_settings'],
       $container->get('media.oembed.url_resolver'),
       $container->get('http_client'),
-      $container->get('path.validator'),
       $container->get('config.factory')
     );
   }
@@ -78,12 +78,11 @@ final class VideoFormatter extends LinkFormatter {
 
     foreach ($items as $delta => $item) {
 
-      $this->createVideo($item);
-
       if (!empty($item->getUrl()->toString())) {
         $elements[$delta] = [
           '#prefix' => '<div class="itk-video itk-video-responsive">',
-          '#markup' => $this->createVideoIframe($item),
+          '#type' => 'inline_template',
+          '#template' => $this->createVideoIframe($item),
           '#suffix' => '</div>',
         ];
       }
