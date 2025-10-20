@@ -227,6 +227,16 @@ final class VideoFormatter extends LinkFormatter {
     return NULL;
   }
 
+    /**
+     * Apply cookie consent attribute changes to iframe.
+     *
+     * @param string $content
+     *   The original iframe content.
+     * @param string $requiredCookies
+     *   The required cookies.
+     * @return false|string
+     *   THe resultin iframe content.
+     */
   private function consentifyOEmmed(string $content, string $requiredCookies) {
     $document = new DOMDocument();
     $document->loadHTML($content);
