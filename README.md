@@ -26,7 +26,7 @@ displayed.
 
 The module includes a permission to access the configuration page: "Administer ITK Video settings"
 
-If allowed access the settings are set on ```/admin/config/media/itk-video```.
+If allowed access the settings are set on `/admin/config/media/itk-video`.
 Settings include:
 
 - Respect limitations provided by cookieinformation.com
