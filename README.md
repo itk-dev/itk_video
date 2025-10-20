@@ -24,8 +24,7 @@ displayed.
 
 ## How to use
 
-The module includes a permission to access the configuration page:
-```"Administer ITK Video settings"```
+The module includes a permission to access the configuration page: "Administer ITK Video settings"
 
 If allowed access the settings are set on ```/admin/config/media/itk-video```.
 Settings include:
