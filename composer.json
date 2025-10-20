@@ -7,8 +7,8 @@
         "Drupal"
     ],
     "require": {
-        "drush/drush": "^12 || ^13",
         "ext-dom": "*",
+        "drush/drush": "^12 || ^13",
         "psr/cache": "^3.0"
     },
     "require-dev": {

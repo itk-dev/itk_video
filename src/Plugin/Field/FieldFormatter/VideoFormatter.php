@@ -2,7 +2,6 @@
 
 namespace Drupal\itk_video\Plugin\Field\FieldFormatter;
 
-use DOMDocument;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ImmutableConfig;
@@ -194,7 +193,7 @@ final class VideoFormatter extends LinkFormatter {
       $requiredCookies = $supportedProviders[$providerKey]['requiredCookies'];
 
       if (!empty($requiredCookies) && isset($videoArray['iframe'])) {
-        $videoArray['iframe'] = $this->consentifyOEmmed($videoArray['iframe'], $requiredCookies);
+        $videoArray['iframe'] = $this->consentifyOembed($videoArray['iframe'], $requiredCookies);
         $blockedText = $this->t('<strong>Accept cookies</strong> to view this video:');
         if ($fieldValue->title) {
           $blockedText .= '<br>"' . $fieldValue->title . '"';
@@ -227,25 +226,26 @@ final class VideoFormatter extends LinkFormatter {
     return NULL;
   }
 
-    /**
-     * Apply cookie consent attribute changes to iframe.
-     *
-     * @param string $content
-     *   The original iframe content.
-     * @param string $requiredCookies
-     *   The required cookies.
-     * @return false|string
-     *   THe resultin iframe content.
-     */
-  private function consentifyOEmmed(string $content, string $requiredCookies) {
-    $document = new DOMDocument();
+  /**
+   * Apply cookie consent attribute changes to iframe.
+   *
+   * @param string $content
+   *   The original iframe content.
+   * @param string $requiredCookies
+   *   The required cookies.
+   *
+   * @return false|string
+   *   The resulting iframe content.
+   */
+  private function consentifyOembed(string $content, string $requiredCookies): bool|string {
+    $document = new \DOMDocument();
     $document->loadHTML($content);
     $iframe = $document->getElementsByTagName('iframe')->item(0);
     if ($iframe && $iframe->hasAttribute('src')) {
       $src = $iframe->getAttribute('src');
       $iframe->setAttribute('src', '');
       $iframe->setAttribute('data-consent-src', $src);
-      $iframe->setAttribute('data-category-consent',  $requiredCookies);
+      $iframe->setAttribute('data-category-consent', $requiredCookies);
     }
     else {
       return 'Iframe src not found';
@@ -253,4 +253,5 @@ final class VideoFormatter extends LinkFormatter {
 
     return $document->saveHtml($iframe);
   }
+
 }
