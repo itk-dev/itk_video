@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 1.0.1
+
+- [PR-2](https://github.com/itk-dev/itk_video/pull/2)
+
+  - Fix display of blocked text
+
+## 1.0.0
+
 - [PR-1](https://github.com/itk-dev/itk_video/pull/1)
 
   - Base functionality with a new itk_video field type
