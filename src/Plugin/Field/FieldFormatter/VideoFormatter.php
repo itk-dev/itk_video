@@ -194,7 +194,7 @@ final class VideoFormatter extends LinkFormatter {
 
       if (!empty($requiredCookies) && isset($videoArray['iframe'])) {
         $videoArray['iframe'] = $this->consentifyOembed($videoArray['iframe'], $requiredCookies);
-        $blockedText = '<strong onclick="javascript:CookieConsent.renew();">' . $this->t('Accept cookies') . '</strong> to view this video:';
+        $blockedText = $this->t('<strong onclick=":js">Accept cookies</strong> to view this video:', [':js' => 'javascript:CookieConsent.renew();']);
         if ($fieldValue->title) {
           $blockedText .= '<br>"' . $fieldValue->title . '"';
         }
