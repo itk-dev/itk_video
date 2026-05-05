@@ -4,11 +4,12 @@
   position: relative;
   height: 0;
   margin-bottom: 1.5em;
+  background: #e2ecee;
+  border: 2px solid #d5e4e6;
 }
 
 .itk-video-responsive > iframe {
-  background: #e2ecee;
-  border: 3px solid #d5e4e6;
+  z-index: 1;
   position: absolute;
   top: 0;
   left: 0;
@@ -17,7 +18,7 @@
 }
 
 .itk-blocked-text {
-  z-index: 1;
+  z-index: 0;
   position: absolute;
   margin: 0 auto;
   left: 0;
@@ -31,3 +32,4 @@
     text-decoration: underline;
   }
 }
+
